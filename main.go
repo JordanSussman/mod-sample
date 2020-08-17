@@ -47,9 +47,9 @@ func config(c *gin.Context) {
 	var steps []*yaml.Step
 	steps = append(steps, payload.Steps...)
 	steps = append(steps, &yaml.Step{
-			Name: "config",
-			Image: "alpine",
-			Commands: []string{"echo hello from config"},
+		Name:     "config",
+		Image:    "alpine",
+		Commands: []string{"echo hello from config"},
 	})
 	payload.Steps = steps
 
