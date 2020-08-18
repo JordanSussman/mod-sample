@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-vela/compiler/compiler/native"
 	"github.com/go-vela/types/yaml"
 	"net/http"
 	"strings"
@@ -39,19 +40,19 @@ func authMiddleware(token string) gin.HandlerFunc {
 }
 
 func config(c *gin.Context) {
-	var payload yaml.Build
+	var payload native.ModifyRequest
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	var steps []*yaml.Step
-	steps = append(steps, payload.Steps...)
+	steps = append(steps, payload.Pipeline.Steps...)
 	steps = append(steps, &yaml.Step{
-		Name:     "config",
+		Name:     "modification",
 		Image:    "alpine",
-		Commands: []string{"echo hello from config"},
+		Commands: []string{"echo hello from modification"},
 	})
-	payload.Steps = steps
+	payload.Pipeline.Steps = steps
 
-	c.JSON(http.StatusOK, payload)
+	c.JSON(http.StatusOK, payload.Pipeline)
 }
